@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ERPBasico.Models
 {
-    public class PersonaBase : EntidadBase
+    public abstract class PersonaBase : EntidadBase
     {
         [Required(ErrorMessage = "Nombre es un campo requerido"), StringLength(30, ErrorMessage = "Nombre demasiado largo")]
         public string Nombre { get; set; }
