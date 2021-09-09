@@ -15,17 +15,13 @@ namespace ERPBasico.Models
         [Required(ErrorMessage = "DNI es un campo requerido")]
         public int Dni { get; set; }        
         [MinLength(1, ErrorMessage = "Se debe registrar al menos un teléfono")]
-        public virtual IList<Telefono> Telefonos { get; set; }
-        //Posible entidad separada
+        public virtual ICollection<Telefono> Telefonos { get; set; }
         [Required, StringLength(20, ErrorMessage = "Dirección es un campo requerido")]
         public string Direccion { get; set; }
-        //Posible entidad separada        
         public string ObraSocial { get; set; }
         [Required(ErrorMessage = "Legajo es un campo requerido")]
         public uint Legajo { get; set; }        
         public bool EmpleadoActivo { get; set; }
-        [Required]
-        public virtual Posicion Posicion { get; set; }
         public virtual Imagen Foto { get; set; }
     }
 }
