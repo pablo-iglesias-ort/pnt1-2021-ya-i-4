@@ -12,7 +12,7 @@ namespace ERPBasico.Models
     {
         [Required(ErrorMessage = "Apellido es un campo requerido"), StringLength(15, ErrorMessage = "Apellido es demasiado largo")]
         public string Apellido { get; set; }
-        [Required(ErrorMessage = "DNI es un campo requerido")]
+        [Range(1, 99999999, ErrorMessage = "DNI fuera del rango permitido"), Required(ErrorMessage = "DNI es un campo requerido")]
         public int Dni { get; set; }        
         [MinLength(1, ErrorMessage = "Se debe registrar al menos un teléfono")]
         public virtual ICollection<Telefono> Telefonos { get; set; }
