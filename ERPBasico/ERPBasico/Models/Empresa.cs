@@ -1,4 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Linq;
+using System.Threading.Tasks;
+
 
 namespace ERPBasico.Models
 {
@@ -8,11 +14,11 @@ namespace ERPBasico.Models
         public string Nombre { get; set; }
         public Rubros rubro { get; set; }
         public Imagen Logo { get; set; }
-        [range(4,100, ErrorManssage="Mail Invalido"),Required(ErrorMenssage= "La direccion es un campo requerido")]
+        [Range(4,100, ErrorMessage="Mail Invalido"),Required(ErrorMessage= "La direccion es un campo requerido")]
         public string Direccion { get; set; }
-        [Required(ErrorMenssage = "El telefono de contacto es un campo requerido")]
+        [Required(ErrorMessage = "El telefono de contacto es un campo requerido")]
         public Telefono TelefonoContacto { get; set; }
-        [Required(ErrorMenssage = "El mail de contacto es un campo requerido")]
+        [Required(ErrorMessage = "El mail de contacto es un campo requerido")]
         public string EmailContacto { get; set; }
 
     }
