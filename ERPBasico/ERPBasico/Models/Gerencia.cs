@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERPBasico.Models
 {
@@ -10,8 +13,8 @@ namespace ERPBasico.Models
         [Required, StringLength(20, ErrorMessage = "Dirección es un campo requerido")]
         public Gerencia Direccion { get; set; }
         public Posicion Responsable { get; set; }
-        public Posicion[] Posiciones{ get; set; }
-        public Gerencia[] Gerencias { get; set; }
+        [ForeignKey("Empresa")]
+        public long EmpresaId { get; set; }
         public Empresa Empresa { get; set; }
     }
 }
