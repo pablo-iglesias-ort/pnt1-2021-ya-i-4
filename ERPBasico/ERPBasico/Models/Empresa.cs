@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 
 namespace ERPBasico.Models
@@ -12,7 +8,7 @@ namespace ERPBasico.Models
     {
         [Required(ErrorMessage = "Nombre es un campo requerido")]
         public string Nombre { get; set; }
-        public Rubros rubro { get; set; }
+        public Rubro rubro { get; set; }
         public Imagen Logo { get; set; }
         [Range(4,100, ErrorMessage="Mail Invalido"),Required(ErrorMessage= "La direccion es un campo requerido")]
         public string Direccion { get; set; }

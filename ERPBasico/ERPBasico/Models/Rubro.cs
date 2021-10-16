@@ -2,7 +2,7 @@
 
 namespace ERPBasico.Models
 {
-    public enum Rubros
+    public enum Rubro
     {
         ALIMENTOS = 1,
         INDUSTRIA = 2,
