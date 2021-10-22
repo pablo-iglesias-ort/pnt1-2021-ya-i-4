@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERPBasico.Migrations
 {
     [DbContext(typeof(ModelContext))]
-    [Migration("20211016001404_InitialCreate")]
+    [Migration("20211022013023_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -340,7 +340,7 @@ namespace ERPBasico.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ERPBasico.Models.Empleado", "Jefe")
+                    b.HasOne("ERPBasico.Models.Posicion", "Jefe")
                         .WithMany()
                         .HasForeignKey("JefeId")
                         .OnDelete(DeleteBehavior.Cascade)
