@@ -338,7 +338,7 @@ namespace ERPBasico.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("ERPBasico.Models.Empleado", "Jefe")
+                    b.HasOne("ERPBasico.Models.Posicion", "Jefe")
                         .WithMany()
                         .HasForeignKey("JefeId")
                         .OnDelete(DeleteBehavior.Cascade)
