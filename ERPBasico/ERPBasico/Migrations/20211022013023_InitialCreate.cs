@@ -207,9 +207,9 @@ namespace ERPBasico.Migrations
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
-                        name: "FK_Posiciones_Empleados_JefeId",
+                        name: "FK_Posiciones_Posiciones_JefeId",
                         column: x => x.JefeId,
-                        principalTable: "Empleados",
+                        principalTable: "Posiciones",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
