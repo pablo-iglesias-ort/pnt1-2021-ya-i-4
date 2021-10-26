@@ -10,11 +10,11 @@ using ERPBasico.Models;
 
 namespace ERPBasico.Controllers
 {
-    public class EmpleadoesController : Controller
+    public class EmpleadoController : Controller
     {
         private readonly ModelContext _context;
 
-        public EmpleadoesController(ModelContext context)
+        public EmpleadoController(ModelContext context)
         {
             _context = context;
         }
