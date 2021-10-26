@@ -1,10 +1,19 @@
 ﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
 for details on configuring this project to bundle and minify static web assets. */
 
+html {
+    font-size: 62.5%; /* 1 rem = 10 px*/
+    box-sizing: border-box; /* Evita que el padding modifique el tamaño de mis imagenes*/
+}
+
+body {
+    font-size: 16px; /* 1 rem = 10 px*/
+}
+
 a.navbar-brand {
-  white-space: normal;
-  text-align: center;
-  word-break: break-all;
+    white-space: normal;
+    text-align: center;
+    word-break: break-all;
 }
 
 /* Provide sufficient contrast against white background */
@@ -68,4 +77,59 @@ body {
   width: 100%;
   white-space: nowrap;
   line-height: 60px; /* Vertically center the text there */
+}
+
+/* Login styles */
+
+.text-center {
+
+    display: flex;
+    justify-content: center;
+    margin-top: 3rem;
+}
+
+.form-signin {
+    background: linear-gradient(90deg, #84339f 19%, #904da4 40%, #9b50a1 63%, #82308d 90%);
+    height: 30rem;
+    width: 60rem;
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    align-items: center;
+    border-radius: 1rem;
+    color: #ffffff;
+    font-weight: 800;
+    text-transform: uppercase;
+    font-size: .9rem;
+    box-shadow: 0px 0px 26px 7px rgba(0, 0, 0, 0.36);
+}
+.elemento1 {
+    display: flex;
+    flex-direction: column;
+}
+
+.elemento1 form {
+    display: flex;
+    flex-direction: column;
+    line-height: 2rem;
+ }
+
+.form-login label {
+    display: block
+}
+
+ form button,
+.form-login input {
+    width: 100%;
+    border-radius: .3rem;
+    border: none;
+}
+
+.elemento1 h2 {
+    font-size: 4rem;
+    margin-bottom: 1.6rem;
+}
+
+form button{
+    margin-top: 2rem;
 }
