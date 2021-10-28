@@ -61,7 +61,6 @@ Body:
 - Empleado
 - Telefono
 - TipoTelefono
-- Foto
 - Posición
 - Gerencia
 - CentroDeCosto
@@ -97,7 +96,6 @@ De la misma manera Uds. deben definir los tipos de datos asociados a cada una de
 - Legajo
 - EmpleadoActivo
 - Posicion
-- Foto
 ```
 **Telefono**
 ```
@@ -108,12 +106,6 @@ De la misma manera Uds. deben definir los tipos de datos asociados a cada una de
 **TipoTelefono**
 ```
 - Nombre
-```
-
-**Imagen**
-```
-- Nombre
-- Path
 ```
 
 **Posicion**
@@ -157,7 +149,6 @@ De la misma manera Uds. deben definir los tipos de datos asociados a cada una de
 ```
 - Nombre
 - Rubro
-- Logo
 - Direccion
 - TelefonoContacto
 - EmailContacto
@@ -177,11 +168,11 @@ De la misma manera Uds. deben definir los tipos de datos asociados a cada una de
 
 **Empleado**
 - Los empleados, deben ser agregados por otro Empleado.
-	- Al momento, del alta del empleado, se le definirá un username y password definida automaticamente por el sistema con el DNI.
+	- Al momento del alta del empleado se le definirá un username y password definida automaticamente por el sistema con el DNI.
     - También se le asignará a estas cuentas el rol de empleado y adicionalmente el de RRHH si corresponde.
-- Un empleado puede consultar todos sus datos y actualizar solo sus telefonos y foto.
+- Un empleado puede consultar todos sus datos y actualizar solo sus telefonos.
 - Puede navegar el organigrama. Para detalle, de funcionalidad, ver Organigrama. 
-- Puede actualizar datos de contacto, como sus telefonos, dirección y foto.. Pero no puede modificar su DNI, Nombre, Apellido, etc.
+- Puede actualizar datos de contacto, como sus telefonos y dirección.. Pero no puede modificar su DNI, Nombre, Apellido, etc.
 - Pueden Imputar gastos a su Centro de Costo.
 - Cada empleado puede listar sus gastos en orden decreciente, por fecha.
 
@@ -201,8 +192,7 @@ De la misma manera Uds. deben definir los tipos de datos asociados a cada una de
 - Puede realizar un listado de empleados, con sueldo en forma decreciente por el concepto de sueldos y luego Creciente para Apellido y Nombre. 
     - Se debe incluir Sueldo,Apellido, Nombre, Nombre de la posición.
 - No puede modificar ni eliminar un Gasto de cualquier Empleado.
-- Puede listar todos los gastos de todos los empleados en forma decreciente por fecha y ordenados de manera creciente por Apellido y Nombre. Se debe incluir la información de que gerencia pertenece.
-- Listar los montos totales de gastos por cada gerencia, idependientemente de si es una Gerencia o SubGerencia. (Orden decreciente por monto)
+- Listar los montos totales de gastos por cada gerencia, independientemente de si es una Gerencia o SubGerencia. (Orden decreciente por monto)
 
 **Posición**
 - La posición, es la que dará la relación entre un Empleado y la Gerencia a la cual pertenece.
@@ -219,7 +209,7 @@ De la misma manera Uds. deben definir los tipos de datos asociados a cada una de
 
 
 **Aplicación General**
-- Información institucional, en base a la información de la Empresa, con su respectiva imagen (Logo)
+- Información institucional, en base a la información de la Empresa.
 - No existe un limite para las posiciones dependientes. Ejemplo, puede existir 10 o 1000 posiciones que dependan de una posición gerencial. En otras palabras, un Gerente asignado a una posición de Gerente de IT, puede tener 1, 10 o 1000 posiciones de IT general, que dependen de ella. 
 - Los accesos a las funcionalidades y/o capacidades, debe estar basada en los roles que tenga cada individuo.
 
