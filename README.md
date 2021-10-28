@@ -177,7 +177,7 @@ De la misma manera Uds. deben definir los tipos de datos asociados a cada una de
 
 **Empleado**
 - Los empleados, deben ser agregados por otro Empleado.
-	- Al momento, del alta del empleado, se le definirá un username y password definida automaticamente por el sistema con el DNI.
+	- Al momento del alta del empleado se le definirá un username y password definida automaticamente por el sistema con el DNI.
     - También se le asignará a estas cuentas el rol de empleado y adicionalmente el de RRHH si corresponde.
 - Un empleado puede consultar todos sus datos y actualizar solo sus telefonos y foto.
 - Puede navegar el organigrama. Para detalle, de funcionalidad, ver Organigrama. 
@@ -201,8 +201,7 @@ De la misma manera Uds. deben definir los tipos de datos asociados a cada una de
 - Puede realizar un listado de empleados, con sueldo en forma decreciente por el concepto de sueldos y luego Creciente para Apellido y Nombre. 
     - Se debe incluir Sueldo,Apellido, Nombre, Nombre de la posición.
 - No puede modificar ni eliminar un Gasto de cualquier Empleado.
-- Puede listar todos los gastos de todos los empleados en forma decreciente por fecha y ordenados de manera creciente por Apellido y Nombre. Se debe incluir la información de que gerencia pertenece.
-- Listar los montos totales de gastos por cada gerencia, idependientemente de si es una Gerencia o SubGerencia. (Orden decreciente por monto)
+- Listar los montos totales de gastos por cada gerencia, independientemente de si es una Gerencia o SubGerencia. (Orden decreciente por monto)
 
 **Posición**
 - La posición, es la que dará la relación entre un Empleado y la Gerencia a la cual pertenece.
