@@ -14,7 +14,7 @@ namespace ERPBasico.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "3.1.15");
+                .HasAnnotation("ProductVersion", "5.0.11");
 
             modelBuilder.Entity("ERPBasico.Models.CentroDeCosto", b =>
                 {
@@ -44,13 +44,13 @@ namespace ERPBasico.Migrations
 
                     b.Property<string>("Apellido")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(15);
+                        .HasMaxLength(15)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("Direccion")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(20);
+                        .HasMaxLength(20)
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Dni")
                         .HasColumnType("INTEGER");
@@ -73,10 +73,14 @@ namespace ERPBasico.Migrations
 
                     b.Property<string>("Nombre")
                         .IsRequired()
-                        .HasColumnType("TEXT")
-                        .HasMaxLength(30);
+                        .HasMaxLength(30)
+                        .HasColumnType("TEXT");
 
                     b.Property<string>("ObraSocial")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -110,7 +114,7 @@ namespace ERPBasico.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<long>("TelefonoContactoId")
+                    b.Property<long?>("TelefonoContactoId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("rubro")
@@ -164,7 +168,7 @@ namespace ERPBasico.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("DireccionId")
+                    b.Property<long?>("DireccionId")
                         .HasColumnType("INTEGER");
 
                     b.Property<long>("EmpresaId")
@@ -279,6 +283,8 @@ namespace ERPBasico.Migrations
                     b.HasOne("ERPBasico.Models.Imagen", "Foto")
                         .WithMany()
                         .HasForeignKey("FotoId");
+
+                    b.Navigation("Foto");
                 });
 
             modelBuilder.Entity("ERPBasico.Models.Empresa", b =>
@@ -289,9 +295,11 @@ namespace ERPBasico.Migrations
 
                     b.HasOne("ERPBasico.Models.Telefono", "TelefonoContacto")
                         .WithMany()
-                        .HasForeignKey("TelefonoContactoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("TelefonoContactoId");
+
+                    b.Navigation("Logo");
+
+                    b.Navigation("TelefonoContacto");
                 });
 
             modelBuilder.Entity("ERPBasico.Models.Gasto", b =>
@@ -307,21 +315,27 @@ namespace ERPBasico.Migrations
                         .HasForeignKey("EmpleadoId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("CentroDeCosto");
+
+                    b.Navigation("Empleado");
                 });
 
             modelBuilder.Entity("ERPBasico.Models.Gerencia", b =>
                 {
                     b.HasOne("ERPBasico.Models.Gerencia", "Direccion")
                         .WithMany()
-                        .HasForeignKey("DireccionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("DireccionId");
 
                     b.HasOne("ERPBasico.Models.Empresa", "Empresa")
                         .WithMany()
                         .HasForeignKey("EmpresaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Direccion");
+
+                    b.Navigation("Empresa");
                 });
 
             modelBuilder.Entity("ERPBasico.Models.Posicion", b =>
@@ -343,6 +357,12 @@ namespace ERPBasico.Migrations
                         .HasForeignKey("JefeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("empleado");
+
+                    b.Navigation("gerencia");
+
+                    b.Navigation("Jefe");
                 });
 
             modelBuilder.Entity("ERPBasico.Models.Telefono", b =>
@@ -350,6 +370,21 @@ namespace ERPBasico.Migrations
                     b.HasOne("ERPBasico.Models.Empleado", null)
                         .WithMany("Telefonos")
                         .HasForeignKey("EmpleadoId");
+                });
+
+            modelBuilder.Entity("ERPBasico.Models.CentroDeCosto", b =>
+                {
+                    b.Navigation("Gastos");
+                });
+
+            modelBuilder.Entity("ERPBasico.Models.Empleado", b =>
+                {
+                    b.Navigation("Telefonos");
+                });
+
+            modelBuilder.Entity("ERPBasico.Models.Gerencia", b =>
+                {
+                    b.Navigation("Responsable");
                 });
 #pragma warning restore 612, 618
         }
