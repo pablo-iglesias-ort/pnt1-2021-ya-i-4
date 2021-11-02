@@ -10,7 +10,6 @@ namespace ERPBasico.Data
     public class ModelContext : DbContext
     {
         public ModelContext(DbContextOptions<ModelContext> opt) : base(opt) { }
-
         public DbSet<CentroDeCosto> CentrosDeCosto { get; set; }
         public DbSet<Empleado> Empleados { get; set; }
         public DbSet<Empresa> Empresas { get; set; }
