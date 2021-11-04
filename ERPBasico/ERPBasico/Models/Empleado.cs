@@ -26,5 +26,7 @@ namespace ERPBasico.Models
         [Required]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+        [Required]
+        public Rol Rol { get; set; }
     }
 }
