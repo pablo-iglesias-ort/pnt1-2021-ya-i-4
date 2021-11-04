@@ -56,6 +56,7 @@ namespace ERPBasico.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Apellido,Dni,Direccion,ObraSocial,Legajo,EmpleadoActivo,Nombre,Email,Id,FechaAlta")] Empleado empleado)
         {
+
             if (ModelState.IsValid)
             {
                 _context.Add(empleado);
