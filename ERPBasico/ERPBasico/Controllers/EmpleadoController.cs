@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ERPBasico.Data;
 using ERPBasico.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ERPBasico.Controllers
 {
@@ -23,6 +24,18 @@ namespace ERPBasico.Controllers
         public async Task<IActionResult> Index()
         {
             return View(await _context.Empleados.ToListAsync());
+        }
+
+        [Authorize]
+        public async Task<IActionResult> EditarDatosContacto()
+        {
+            var IdEmpleado = long.Parse(User.FindFirst("EmpleadoId").Value);
+
+            var empleadoConTelefonos = _context.Empleados
+                                                    .Include(e => e.Telefonos)
+                                                    .FirstOrDefault(e => e.Id == IdEmpleado);
+
+            return View(empleadoConTelefonos);
         }
 
         // GET: Empleadoes/Details/5

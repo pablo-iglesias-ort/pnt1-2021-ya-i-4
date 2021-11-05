@@ -1,4 +1,5 @@
 using ERPBasico.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +25,14 @@ namespace ERPBasico
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(
+                opciones =>
+                {
+                    opciones.LoginPath = "/Home/Ingresar";
+                    opciones.AccessDeniedPath = "/Home/Privacy";
+                    opciones.LogoutPath = "/Home/Salir";
+                }
+            );
             services.AddControllersWithViews();
             services.AddDbContext<ModelContext>(opt => opt.UseSqlite("filename=BaseDeDatos.db"));
         }
@@ -43,6 +52,8 @@ namespace ERPBasico
 
             app.UseRouting();
 
+            app.UseAuthentication();
+
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
@@ -51,6 +62,10 @@ namespace ERPBasico
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
             });
+
+            app.UseCookiePolicy();
+
+
         }
     }
 }

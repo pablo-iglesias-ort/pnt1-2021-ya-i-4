@@ -23,7 +23,7 @@ namespace ERPBasico.Models
         public uint Legajo { get; set; }        
         public bool EmpleadoActivo { get; set; }
         public virtual Imagen Foto { get; set; }
-        public string Password { get; set; }
+        public byte[] Password { get; set; }
         [Required]
         public Rol Rol { get; set; }
     }
