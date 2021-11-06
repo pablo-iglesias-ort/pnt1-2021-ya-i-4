@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERPBasico.Migrations
 {
     [DbContext(typeof(ModelContext))]
-    [Migration("20211104222444_UsuarioRol")]
-    partial class UsuarioRol
+    [Migration("20211106150620_CampoGerenciaACentroDeCosto")]
+    partial class CampoGerenciaACentroDeCosto
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,6 +27,9 @@ namespace ERPBasico.Migrations
                     b.Property<DateTime>("FechaAlta")
                         .HasColumnType("TEXT");
 
+                    b.Property<long>("GerenciaId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<double>("MontoMaximo")
                         .HasColumnType("REAL");
 
@@ -34,6 +37,8 @@ namespace ERPBasico.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GerenciaId");
 
                     b.ToTable("CentrosDeCosto");
                 });
@@ -81,9 +86,8 @@ namespace ERPBasico.Migrations
                     b.Property<string>("ObraSocial")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<byte[]>("Password")
+                        .HasColumnType("BLOB");
 
                     b.Property<int>("Rol")
                         .HasColumnType("INTEGER");
@@ -281,6 +285,17 @@ namespace ERPBasico.Migrations
                     b.HasIndex("EmpleadoId");
 
                     b.ToTable("Telefonos");
+                });
+
+            modelBuilder.Entity("ERPBasico.Models.CentroDeCosto", b =>
+                {
+                    b.HasOne("ERPBasico.Models.Gerencia", "Gerencia")
+                        .WithMany()
+                        .HasForeignKey("GerenciaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Gerencia");
                 });
 
             modelBuilder.Entity("ERPBasico.Models.Empleado", b =>

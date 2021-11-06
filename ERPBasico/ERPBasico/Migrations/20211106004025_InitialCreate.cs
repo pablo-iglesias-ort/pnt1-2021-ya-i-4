@@ -50,7 +50,8 @@ namespace ERPBasico.Migrations
                     Legajo = table.Column<uint>(type: "INTEGER", nullable: false),
                     EmpleadoActivo = table.Column<bool>(type: "INTEGER", nullable: false),
                     FotoId = table.Column<long>(type: "INTEGER", nullable: true),
-                    Password = table.Column<string>(type: "TEXT", nullable: false),
+                    Password = table.Column<byte[]>(type: "BLOB", nullable: true),
+                    Rol = table.Column<int>(type: "INTEGER", nullable: false),
                     FechaAlta = table.Column<DateTime>(type: "TEXT", nullable: false),
                     Nombre = table.Column<string>(type: "TEXT", maxLength: 30, nullable: false),
                     Email = table.Column<string>(type: "TEXT", nullable: false)
@@ -187,8 +188,8 @@ namespace ERPBasico.Migrations
                     nombre = table.Column<string>(type: "TEXT", nullable: false),
                     descripcion = table.Column<string>(type: "TEXT", nullable: true),
                     sueldo = table.Column<double>(type: "REAL", nullable: false),
-                    EmpleadoId = table.Column<long>(type: "INTEGER", nullable: false),
-                    JefeId = table.Column<long>(type: "INTEGER", nullable: false),
+                    EmpleadoId = table.Column<long>(type: "INTEGER", nullable: true),
+                    JefeId = table.Column<long>(type: "INTEGER", nullable: true),
                     GerenciaId = table.Column<long>(type: "INTEGER", nullable: false),
                     FechaAlta = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
