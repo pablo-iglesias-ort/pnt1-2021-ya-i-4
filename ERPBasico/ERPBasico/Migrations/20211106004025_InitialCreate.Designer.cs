@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERPBasico.Migrations
 {
     [DbContext(typeof(ModelContext))]
-    [Migration("20211029010523_InitialCreate")]
+    [Migration("20211106004025_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -81,9 +81,11 @@ namespace ERPBasico.Migrations
                     b.Property<string>("ObraSocial")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Password")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<byte[]>("Password")
+                        .HasColumnType("BLOB");
+
+                    b.Property<int>("Rol")
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 

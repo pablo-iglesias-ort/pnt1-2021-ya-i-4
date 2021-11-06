@@ -25,6 +25,9 @@ namespace ERPBasico.Migrations
                     b.Property<DateTime>("FechaAlta")
                         .HasColumnType("TEXT");
 
+                    b.Property<long>("GerenciaId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<double>("MontoMaximo")
                         .HasColumnType("REAL");
 
@@ -32,6 +35,8 @@ namespace ERPBasico.Migrations
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("GerenciaId");
 
                     b.ToTable("CentrosDeCosto");
                 });
@@ -278,6 +283,17 @@ namespace ERPBasico.Migrations
                     b.HasIndex("EmpleadoId");
 
                     b.ToTable("Telefonos");
+                });
+
+            modelBuilder.Entity("ERPBasico.Models.CentroDeCosto", b =>
+                {
+                    b.HasOne("ERPBasico.Models.Gerencia", "Gerencia")
+                        .WithMany()
+                        .HasForeignKey("GerenciaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Gerencia");
                 });
 
             modelBuilder.Entity("ERPBasico.Models.Empleado", b =>

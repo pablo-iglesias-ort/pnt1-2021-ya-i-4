@@ -53,21 +53,22 @@ namespace ERPBasico.Controllers
         [HttpPost]
         public async Task<IActionResult> Ingresar(string usuario,string password)
         {
-          /*  var empleado = new Empleado
-            {
-                Nombre = "JuanPablo",
-                Apellido = "Chupa..",
-                Direccion = "Avenida Siempre VIVA",
-                Dni = 11111111,
-                Email = usuario,
-                EmpleadoActivo = true,
-                FechaAlta = DateTime.Now,
-                Legajo = 1234,
-                Password = _seguridad.EncriptarPass(password),
-                Rol = Rol.Empleado
-            };
-            _context.Empleados.Add(empleado);
-            _context.SaveChanges();*/
+            //var empleado = new Empleado
+            //{
+            //    Nombre = "Franco",
+            //    Apellido = "Redoni",
+            //    Direccion = "Domicilio Test",
+            //    Dni = 11111111,
+            //    Email = usuario,
+            //    EmpleadoActivo = true,
+            //    FechaAlta = DateTime.Now,
+            //    Legajo = 6548,
+            //    Password = _seguridad.EncriptarPass(password),
+            //    Rol = Rol.Empleado
+            //};
+            //_context.Empleados.Add(empleado);
+            //_context.SaveChanges();
+
 
             var urlIngreso = TempData["UrlIngreso"] as string;
             if (!string.IsNullOrEmpty(usuario) && !string.IsNullOrEmpty(password))

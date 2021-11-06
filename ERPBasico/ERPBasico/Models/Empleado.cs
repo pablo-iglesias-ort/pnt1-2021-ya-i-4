@@ -24,6 +24,8 @@ namespace ERPBasico.Models
         public bool EmpleadoActivo { get; set; }
         public virtual Imagen Foto { get; set; }
         public byte[] Password { get; set; }
+        [NotMapped]
+        public string NombreApellido { get => Nombre + " " + Apellido; }
         [Required]
         public Rol Rol { get; set; }
     }
