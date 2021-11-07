@@ -79,7 +79,7 @@ namespace ERPBasico.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
-        public async Task<IActionResult> Create([Bind("Apellido,Dni,Direccion,ObraSocial,Legajo,EmpleadoActivo,Nombre,Email,Id,FechaAlta, Rol")] Empleado empleado)
+        public async Task<IActionResult> Create([Bind("Apellido,Dni,Direccion,ObraSocial,Legajo,EmpleadoActivo,Nombre,Email,Id,FechaAlta")] Empleado empleado)
         {
 
             if (ModelState.IsValid)
