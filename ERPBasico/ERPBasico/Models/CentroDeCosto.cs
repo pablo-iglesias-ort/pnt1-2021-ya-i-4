@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ERPBasico.Models
@@ -10,6 +11,6 @@ namespace ERPBasico.Models
         [ForeignKey("Gerencia")]
         public long GerenciaId { get; set; }
         public virtual Gerencia Gerencia { get; set; }
-        public Gasto[] Gastos { get; set; }
+        public List<Gasto> Gastos { get; set; }
     }
 }

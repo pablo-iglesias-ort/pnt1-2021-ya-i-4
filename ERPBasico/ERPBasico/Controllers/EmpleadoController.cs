@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using ERPBasico.Data;
 using ERPBasico.Models;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace ERPBasico.Controllers
 {
+    [Authorize]
     public class EmpleadoController : Controller
     {
         private readonly ModelContext _context;
@@ -23,13 +25,19 @@ namespace ERPBasico.Controllers
         // GET: Empleadoes
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Empleados.ToListAsync());
+            var rol = User.FindFirst(ClaimTypes.Role).Value;
+            if (rol == "EmpleadoRRHH")
+                return View(await _context.Empleados.ToListAsync());
+            else
+            {
+                var empleado = await _context.Empleados.FirstOrDefaultAsync(x => x.Id == ObtenerIdEmpleado());
+                return View("Details", empleado);
+            }
         }
 
-        [Authorize]
         public async Task<IActionResult> EditarDatosContacto()
         {
-            var IdEmpleado = long.Parse(User.FindFirst("EmpleadoId").Value);
+            var IdEmpleado = ObtenerIdEmpleado();
 
             var empleadoConTelefonos = _context.Empleados
                                                     .Include(e => e.Telefonos)
@@ -162,6 +170,11 @@ namespace ERPBasico.Controllers
         private bool EmpleadoExists(long id)
         {
             return _context.Empleados.Any(e => e.Id == id);
+        }
+
+        private long ObtenerIdEmpleado()
+        {
+            return long.Parse(User.FindFirst("EmpleadoId").Value);
         }
     }
 }
