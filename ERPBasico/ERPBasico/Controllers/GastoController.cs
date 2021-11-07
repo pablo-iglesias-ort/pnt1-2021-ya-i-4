@@ -25,7 +25,7 @@ namespace ERPBasico.Controllers
         // GET: Gastos
         public async Task<IActionResult> Index()
         {
-            var gastos = _context.Gastos.Where(x => x.EmpleadoId == ObtenerIdEmpleado());
+            var gastos = _context.Gastos.Where(x => x.EmpleadoId == ObtenerIdEmpleado()).OrderByDescending(x => x.Fecha);
             return View(await gastos.ToListAsync());
         }
 
