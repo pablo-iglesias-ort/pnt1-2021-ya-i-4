@@ -13,17 +13,21 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
+                <label class="control-label">Gerencia</label>
+                <select class="form-control" asp-items="ViewBag.Gerencia"></select>
+            </div>
+            <div class="form-group">
+                <label class="control-label">Monto Disponible</label>
+                <select class="form-control" asp-items="ViewBag.MontoDisp"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Empleado" class="control-label"></label>
+                <select asp-for="Empleado" class="form-control" asp-items="ViewBag.Empleado"></select>
+            </div>
+            <div class="form-group">
                 <label asp-for="Descripcion" class="control-label"></label>
                 <input asp-for="Descripcion" class="form-control" />
                 <span asp-validation-for="Descripcion" class="text-danger"></span>
-            </div>
-            @*<div class="form-group">
-                <label asp-for="Gerencia" class="control-label"></label>
-                <select asp-for="Gerencia" class ="form-control" asp-items="ViewBag.Gerencia"></select>
-            </div>*@
-            <div class="form-group">
-                <label asp-for="Empleado" class="control-label"></label>
-                <select asp-for="Empleado" class ="form-control" asp-items="ViewBag.Empleado"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Monto" class="control-label"></label>
@@ -36,10 +40,10 @@
                 <span asp-validation-for="Fecha" class="text-danger"></span>
             </div>
             @*<div class="form-group">
-                <label asp-for="FechaAlta" class="control-label"></label>
-                <input asp-for="FechaAlta" class="form-control" />
-                <span asp-validation-for="FechaAlta" class="text-danger"></span>
-            </div>*@
+            <label asp-for="FechaAlta" class="control-label"></label>
+            <input asp-for="FechaAlta" class="form-control" />
+            <span asp-validation-for="FechaAlta" class="text-danger"></span>
+        </div>*@
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>

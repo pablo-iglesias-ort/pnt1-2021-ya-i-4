@@ -7,9 +7,12 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ERPBasico.Data;
 using ERPBasico.Models;
+using ERPBasico.Dtos;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ERPBasico.Controllers
 {
+    [Authorize]
     public class GastoController : Controller
     {
         private readonly ModelContext _context;
@@ -49,14 +52,31 @@ namespace ERPBasico.Controllers
         // GET: Gastos/Create
         public async Task<IActionResult> Create()
         {
-            var empleado = _context.Empleados.Where(x => x.Id == ObtenerIdEmpleado()).AsEnumerable();
-            var centroDeCosto = await (from p in _context.Posiciones
-                                       join g in _context.Gerencias on p.GerenciaId equals g.Id
-                                       join e in _context.Empleados on p.EmpleadoId equals e.Id
-                                       join c in _context.CentrosDeCosto on g.Id equals c.GerenciaId
-                                       select c).ToListAsync();
-            ViewData["Gerencia"] = new SelectList(centroDeCosto, "Id", "Nombre");
-            ViewData["Empleado"] = new SelectList(empleado, "Id", "NombreApellido");
+            var empleadoId = ObtenerIdEmpleado();
+            var empleadoDto = await (from p in _context.Posiciones
+                                     join g in _context.Gerencias on p.GerenciaId equals g.Id
+                                     join e in _context.Empleados on p.EmpleadoId equals e.Id
+                                     join c in _context.CentrosDeCosto on g.Id equals c.GerenciaId
+                                     where p.EmpleadoId == empleadoId
+                                     select new EmpleadoCompletoDto
+                                     {
+                                         NombreApellido = e.NombreApellido,
+                                         Dni = e.Dni,
+                                         NombreGerencia = g.Nombre,
+                                         NombreCentroDeCostos = c.Nombre,
+                                         NombrePosicion = p.nombre,
+                                         GerenciaId = g.Id,
+                                         CCId = c.Id,
+                                         PosicionId = p.Id,
+                                         MontoMaximoCC = c.MontoMaximo
+                                     }).ToListAsync();
+            var empleado = empleadoDto.FirstOrDefault();
+
+            empleado.MontoDisponible = await ObtenerMontoDisponiblePorCC(empleado.CCId, empleado.MontoMaximoCC);
+            TempData["GastoForm"] = String.Concat(empleado.CCId,",",empleado.MontoDisponible.ToString());
+            ViewData["Gerencia"] = new SelectList(empleadoDto, "Dni", "NombreGerencia");
+            ViewData["Empleado"] = new SelectList(empleadoDto, "Dni", "NombreApellido");
+            ViewData["MontoDisp"] = new SelectList(empleadoDto, "Dni", "MontoDisponible");
             return View();
         }
 
@@ -67,9 +87,20 @@ namespace ERPBasico.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Descripcion,Monto,Fecha")] Gasto gasto)
         {
+            var gastoForm = TempData["GastoForm"] as string;
+            var ccIdMontoArray = gastoForm.Split(',');
+            var ccId = Convert.ToInt64(ccIdMontoArray[0]);
+            var montoMaximoDisponible = Convert.ToDouble(ccIdMontoArray[1]);
             
             if (ModelState.IsValid)
             {
+                if(gasto.Monto > montoMaximoDisponible)
+                {
+                    return BadRequest();
+                }
+                gasto.CentroDeCostoId = ccId;
+                gasto.EmpleadoId = ObtenerIdEmpleado();
+                gasto.FechaAlta = DateTime.Now;
                 _context.Add(gasto);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -173,6 +204,19 @@ namespace ERPBasico.Controllers
         private long ObtenerIdEmpleado()
         {
             return long.Parse(User.FindFirst("EmpleadoId").Value);
+        }
+
+
+
+        private async Task<double> ObtenerMontoDisponiblePorCC(long cCId, double montoMaximoCC)
+        {
+            var gastosPorCC = await _context.Gastos.Where(x => x.CentroDeCostoId == cCId).ToListAsync();
+            double gastoAlMomento = 0;
+            foreach (var gasto in gastosPorCC)
+            {
+                gastoAlMomento += gasto.Monto;
+            }
+            return montoMaximoCC - gastoAlMomento;
         }
     }
 }
