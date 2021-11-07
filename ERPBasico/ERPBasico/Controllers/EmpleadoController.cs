@@ -16,10 +16,12 @@ namespace ERPBasico.Controllers
     public class EmpleadoController : Controller
     {
         private readonly ModelContext _context;
+        private readonly ISeguridad _seguridad;
 
         public EmpleadoController(ModelContext context)
         {
             _context = context;
+            _seguridad = new SeguridadBasica();
         }
 
         // GET: Empleadoes
@@ -65,6 +67,7 @@ namespace ERPBasico.Controllers
         }
 
         // GET: Empleadoes/Create
+        [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
         public IActionResult Create()
         {
             return View();
@@ -75,11 +78,13 @@ namespace ERPBasico.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Apellido,Dni,Direccion,ObraSocial,Legajo,EmpleadoActivo,Nombre,Email,Id,FechaAlta")] Empleado empleado)
+        [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
+        public async Task<IActionResult> Create([Bind("Apellido,Dni,Direccion,ObraSocial,Legajo,EmpleadoActivo,Nombre,Email,Id,FechaAlta, Rol")] Empleado empleado)
         {
 
             if (ModelState.IsValid)
             {
+                empleado.Password = _seguridad.EncriptarPass(empleado.Dni.ToString());                
                 _context.Add(empleado);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
