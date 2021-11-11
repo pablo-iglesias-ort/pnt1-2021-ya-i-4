@@ -10,6 +10,7 @@ namespace ERPBasico.Models
         [Required(ErrorMessage = "Nombre es un campo requerido")]
         public String Nombre { get; set; }
         public bool EsGerenciaGeneral { get; set; }
+        public long DireccionId { get; set; }
         [Required, StringLength(20, ErrorMessage = "Dirección es un campo requerido")]
         public Gerencia Direccion { get; set; }
         public Posicion Responsable { get; set; }
