@@ -33,7 +33,7 @@ namespace ERPBasico.Controllers
             else
             {
                 var empleado = await _context.Empleados.FirstOrDefaultAsync(x => x.Id == ObtenerIdEmpleado());
-                return View("Details", empleado);
+                return View(nameof(Details), empleado);
             }
         }
 
@@ -66,6 +66,25 @@ namespace ERPBasico.Controllers
             return View(empleado);
         }
 
+        public async Task<IActionResult> EditEmpleadoComun(Empleado empleado)
+        {
+            return View(empleado);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EditEmpleadoComunForm([Bind("Direccion")] string direccion)
+        {
+            var id = ObtenerIdEmpleado();
+            var empleado = await _context.Empleados.FirstOrDefaultAsync(x => x.Id == id);
+            if (empleado == null)
+                return NotFound();
+
+            empleado.Direccion = direccion;
+            _context.Update(empleado);
+            await _context.SaveChangesAsync();
+            return RedirectToAction(nameof(Index));
+        }
         // GET: Empleadoes/Create
         [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
         public IActionResult Create()
@@ -84,7 +103,7 @@ namespace ERPBasico.Controllers
 
             if (ModelState.IsValid)
             {
-                empleado.Password = _seguridad.EncriptarPass(empleado.Dni.ToString());                
+                empleado.Password = _seguridad.EncriptarPass(empleado.Dni.ToString());
                 _context.Add(empleado);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -105,7 +124,11 @@ namespace ERPBasico.Controllers
             {
                 return NotFound();
             }
-            return View(empleado);
+            var rol = User.FindFirst(ClaimTypes.Role).Value;
+            if (rol == "EmpleadoRRHH")
+                return View(empleado);
+            else
+                return RedirectToAction("EditEmpleadoComun", empleado);
         }
 
         // POST: Empleadoes/Edit/5
