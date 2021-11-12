@@ -55,8 +55,8 @@ namespace ERPBasico.Controllers
         {
             //var empleado = new Empleado
             //{
-            //    Nombre = "Franco",
-            //    Apellido = "Redoni",
+            //    Nombre = "Nacho",
+            //    Apellido = "Ampudia",
             //    Direccion = "Domicilio Test",
             //    Dni = 11111111,
             //    Email = usuario,
@@ -64,12 +64,11 @@ namespace ERPBasico.Controllers
             //    FechaAlta = DateTime.Now,
             //    Legajo = 6548,
             //    Password = _seguridad.EncriptarPass(password),
-            //    Rol = Rol.Empleado
+            //    Rol = Rol.EmpleadoRRHH
             //};
             //_context.Empleados.Add(empleado);
             //_context.SaveChanges();
-
-
+            
             var urlIngreso = TempData["UrlIngreso"] as string;
             if (!string.IsNullOrEmpty(usuario) && !string.IsNullOrEmpty(password))
             {

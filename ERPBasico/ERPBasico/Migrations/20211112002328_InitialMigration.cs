@@ -3,25 +3,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace ERPBasico.Migrations
 {
-    public partial class InitialCreate : Migration
+    public partial class InitialMigration : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "CentrosDeCosto",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Nombre = table.Column<string>(type: "TEXT", nullable: true),
-                    MontoMaximo = table.Column<double>(type: "REAL", nullable: false),
-                    FechaAlta = table.Column<DateTime>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_CentrosDeCosto", x => x.Id);
-                });
-
             migrationBuilder.CreateTable(
                 name: "Imagenes",
                 columns: table => new
@@ -68,44 +53,14 @@ namespace ERPBasico.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "Gastos",
-                columns: table => new
-                {
-                    Id = table.Column<long>(type: "INTEGER", nullable: false)
-                        .Annotation("Sqlite:Autoincrement", true),
-                    Descripcion = table.Column<string>(type: "TEXT", nullable: true),
-                    CentroDeCostoId = table.Column<long>(type: "INTEGER", nullable: false),
-                    EmpleadoId = table.Column<long>(type: "INTEGER", nullable: false),
-                    Monto = table.Column<double>(type: "REAL", nullable: false),
-                    Fecha = table.Column<DateTime>(type: "TEXT", nullable: false),
-                    FechaAlta = table.Column<DateTime>(type: "TEXT", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_Gastos", x => x.Id);
-                    table.ForeignKey(
-                        name: "FK_Gastos_CentrosDeCosto_CentroDeCostoId",
-                        column: x => x.CentroDeCostoId,
-                        principalTable: "CentrosDeCosto",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_Gastos_Empleados_EmpleadoId",
-                        column: x => x.EmpleadoId,
-                        principalTable: "Empleados",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Telefonos",
                 columns: table => new
                 {
                     Id = table.Column<long>(type: "INTEGER", nullable: false)
                         .Annotation("Sqlite:Autoincrement", true),
+                    EmpleadoId = table.Column<long>(type: "INTEGER", nullable: false),
                     Numero = table.Column<int>(type: "INTEGER", nullable: false),
                     Tipo = table.Column<int>(type: "INTEGER", nullable: false),
-                    EmpleadoId = table.Column<long>(type: "INTEGER", nullable: true),
                     FechaAlta = table.Column<DateTime>(type: "TEXT", nullable: false)
                 },
                 constraints: table =>
@@ -116,7 +71,7 @@ namespace ERPBasico.Migrations
                         column: x => x.EmpleadoId,
                         principalTable: "Empleados",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Restrict);
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -180,6 +135,28 @@ namespace ERPBasico.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "CentrosDeCosto",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Nombre = table.Column<string>(type: "TEXT", nullable: true),
+                    MontoMaximo = table.Column<double>(type: "REAL", nullable: false),
+                    GerenciaId = table.Column<long>(type: "INTEGER", nullable: false),
+                    FechaAlta = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_CentrosDeCosto", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_CentrosDeCosto_Gerencias_GerenciaId",
+                        column: x => x.GerenciaId,
+                        principalTable: "Gerencias",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Posiciones",
                 columns: table => new
                 {
@@ -201,7 +178,7 @@ namespace ERPBasico.Migrations
                         column: x => x.EmpleadoId,
                         principalTable: "Empleados",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Posiciones_Gerencias_GerenciaId",
                         column: x => x.GerenciaId,
@@ -213,8 +190,43 @@ namespace ERPBasico.Migrations
                         column: x => x.JefeId,
                         principalTable: "Posiciones",
                         principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Gastos",
+                columns: table => new
+                {
+                    Id = table.Column<long>(type: "INTEGER", nullable: false)
+                        .Annotation("Sqlite:Autoincrement", true),
+                    Descripcion = table.Column<string>(type: "TEXT", nullable: true),
+                    CentroDeCostoId = table.Column<long>(type: "INTEGER", nullable: false),
+                    EmpleadoId = table.Column<long>(type: "INTEGER", nullable: false),
+                    Monto = table.Column<double>(type: "REAL", nullable: false),
+                    Fecha = table.Column<DateTime>(type: "TEXT", nullable: false),
+                    FechaAlta = table.Column<DateTime>(type: "TEXT", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Gastos", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Gastos_CentrosDeCosto_CentroDeCostoId",
+                        column: x => x.CentroDeCostoId,
+                        principalTable: "CentrosDeCosto",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Gastos_Empleados_EmpleadoId",
+                        column: x => x.EmpleadoId,
+                        principalTable: "Empleados",
+                        principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_CentrosDeCosto_GerenciaId",
+                table: "CentrosDeCosto",
+                column: "GerenciaId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Empleados_FotoId",
