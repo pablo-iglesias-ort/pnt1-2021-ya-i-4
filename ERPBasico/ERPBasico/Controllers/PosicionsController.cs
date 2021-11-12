@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ERPBasico.Data;
 using ERPBasico.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ERPBasico.Controllers
 {
@@ -48,10 +49,9 @@ namespace ERPBasico.Controllers
         }
 
         // GET: Posicions/Create
+        [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
         public IActionResult Create()
         {
-            ViewData["JefeId"] = new SelectList(_context.Posiciones, "Id", "nombre");
-            ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido");
             ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre");
             return View();
         }
@@ -61,27 +61,21 @@ namespace ERPBasico.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("nombre,descripcion,sueldo,EmpleadoId,JefeId,GerenciaId,Id,FechaAlta")] Posicion posicion)
+        [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
+        public async Task<IActionResult> Create([Bind("nombre,descripcion,sueldo,GerenciaId")] Posicion posicion)
         {
-            var jefeValido = await JefePerteneceAGerenciaByPosicion(posicion);
-            if (ModelState.IsValid && jefeValido)
+            if (ModelState.IsValid)
             {
+                posicion.FechaAlta = DateTime.Now;
                 _context.Add(posicion);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["JefeId"] = new SelectList(_context.Posiciones, "Id", "nombre", posicion.JefeId);
-            ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido", posicion.EmpleadoId);
             ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", posicion.GerenciaId);
             return View(posicion);
         }
-
-        private async Task<Boolean> JefePerteneceAGerenciaByPosicion(Posicion posicion)
-        {
-            var jefe = await _context.Posiciones.FindAsync(posicion.JefeId);
-            return jefe.GerenciaId == posicion.GerenciaId && posicion.Id != posicion.JefeId;
-        }
         // GET: Posicions/Edit/5
+        [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
@@ -94,9 +88,10 @@ namespace ERPBasico.Controllers
             {
                 return NotFound();
             }
-            ViewData["JefeId"] = new SelectList(_context.Posiciones, "Id", "nombre", posicion.JefeId);
-            ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido", posicion.EmpleadoId);
+            var jefesElegibles = await _context.Posiciones.Where(pos => pos.GerenciaId == posicion.GerenciaId && pos.Id != posicion.Id).ToListAsync();
+            ViewData["JefeId"] = new SelectList(jefesElegibles, "Id", "nombre", posicion.JefeId);
             ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", posicion.GerenciaId);
+            TempData["GerenciaIdForm"] = posicion.GerenciaId.ToString();
             return View(posicion);
         }
 
@@ -105,7 +100,8 @@ namespace ERPBasico.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("nombre,descripcion,sueldo,EmpleadoId,JefeId,GerenciaId,Id,FechaAlta")] Posicion posicion)
+        [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
+        public async Task<IActionResult> Edit(long id, [Bind("nombre,descripcion,sueldo,JefeId,GerenciaId,Id")] Posicion posicion)
         {
             if (id != posicion.Id)
             {
@@ -116,6 +112,8 @@ namespace ERPBasico.Controllers
             {
                 try
                 {
+                    var gerenciaId = TempData["GerenciaIdForm"] as string;
+                    posicion.GerenciaId = Convert.ToInt64(gerenciaId);
                     _context.Update(posicion);
                     await _context.SaveChangesAsync();
                 }
@@ -132,13 +130,15 @@ namespace ERPBasico.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["JefeId"] = new SelectList(_context.Posiciones, "Id", "nombre", posicion.JefeId);
+            var jefesElegibles = await _context.Posiciones.Where(pos => pos.GerenciaId == posicion.GerenciaId && pos.Id != posicion.Id).ToListAsync();
+            ViewData["JefeId"] = new SelectList(jefesElegibles, "Id", "nombre", posicion.JefeId);
             ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido", posicion.EmpleadoId);
             ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre", posicion.GerenciaId);
             return View(posicion);
         }
 
         // GET: Posicions/Delete/5
+        [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -162,6 +162,7 @@ namespace ERPBasico.Controllers
         // POST: Posicions/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var posicion = await _context.Posiciones.FindAsync(id);
@@ -173,6 +174,32 @@ namespace ERPBasico.Controllers
         private bool PosicionExists(long id)
         {
             return _context.Posiciones.Any(e => e.Id == id);
+        }
+
+        [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
+        public async Task<IActionResult> ListarGerencias(long idEmpleado)
+        {
+            ViewData["idEmpleado"] = idEmpleado;
+            //ViewData["GerenciaId"] = new SelectList(_context.Gerencias, "Id", "Nombre");
+            return View(await _context.Gerencias.ToListAsync());
+        }
+
+        [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
+        public async Task<IActionResult> ListarPosiciones(long idEmpleado, long idGerencia)
+        {
+            ViewData["idEmpleado"] = idEmpleado;
+            var posicionesElegibles = await _context.Posiciones.Where(pos => pos.GerenciaId == idGerencia).ToListAsync();
+            return View(posicionesElegibles);
+        }
+
+        [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
+        public async Task<IActionResult> AsignarPosicion(long idEmpleado, long idPosicion)
+        {
+            var posicion = await _context.Posiciones.FirstOrDefaultAsync(pos => pos.Id == idPosicion);
+            posicion.EmpleadoId = idEmpleado;
+            _context.Update(posicion);
+            await _context.SaveChangesAsync();
+            return View(nameof(Details), posicion);
         }
     }
 }

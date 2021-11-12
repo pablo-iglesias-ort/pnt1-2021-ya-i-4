@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERPBasico.Migrations
 {
     [DbContext(typeof(ModelContext))]
-    [Migration("20211106150620_CampoGerenciaACentroDeCosto")]
-    partial class CampoGerenciaACentroDeCosto
+    [Migration("20211112012432_AddEsGerente")]
+    partial class AddEsGerente
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -228,7 +228,10 @@ namespace ERPBasico.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("EmpleadoId")
+                    b.Property<long?>("EmpleadoId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<bool>("EsGerente")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("FechaAlta")
@@ -237,7 +240,7 @@ namespace ERPBasico.Migrations
                     b.Property<long>("GerenciaId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("JefeId")
+                    b.Property<long?>("JefeId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("descripcion")
@@ -254,8 +257,7 @@ namespace ERPBasico.Migrations
 
                     b.HasIndex("EmpleadoId");
 
-                    b.HasIndex("GerenciaId")
-                        .IsUnique();
+                    b.HasIndex("GerenciaId");
 
                     b.HasIndex("JefeId");
 
@@ -268,7 +270,7 @@ namespace ERPBasico.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long?>("EmpleadoId")
+                    b.Property<long>("EmpleadoId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("FechaAlta")
@@ -362,21 +364,17 @@ namespace ERPBasico.Migrations
                 {
                     b.HasOne("ERPBasico.Models.Empleado", "empleado")
                         .WithMany()
-                        .HasForeignKey("EmpleadoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EmpleadoId");
 
                     b.HasOne("ERPBasico.Models.Gerencia", "gerencia")
-                        .WithOne("Responsable")
-                        .HasForeignKey("ERPBasico.Models.Posicion", "GerenciaId")
+                        .WithMany()
+                        .HasForeignKey("GerenciaId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.HasOne("ERPBasico.Models.Posicion", "Jefe")
                         .WithMany()
-                        .HasForeignKey("JefeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("JefeId");
 
                     b.Navigation("empleado");
 
@@ -387,9 +385,13 @@ namespace ERPBasico.Migrations
 
             modelBuilder.Entity("ERPBasico.Models.Telefono", b =>
                 {
-                    b.HasOne("ERPBasico.Models.Empleado", null)
+                    b.HasOne("ERPBasico.Models.Empleado", "Empleado")
                         .WithMany("Telefonos")
-                        .HasForeignKey("EmpleadoId");
+                        .HasForeignKey("EmpleadoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Empleado");
                 });
 
             modelBuilder.Entity("ERPBasico.Models.CentroDeCosto", b =>
@@ -400,11 +402,6 @@ namespace ERPBasico.Migrations
             modelBuilder.Entity("ERPBasico.Models.Empleado", b =>
                 {
                     b.Navigation("Telefonos");
-                });
-
-            modelBuilder.Entity("ERPBasico.Models.Gerencia", b =>
-                {
-                    b.Navigation("Responsable");
                 });
 #pragma warning restore 612, 618
         }

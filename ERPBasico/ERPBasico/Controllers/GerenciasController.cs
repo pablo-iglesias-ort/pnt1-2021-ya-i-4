@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ERPBasico.Data;
 using ERPBasico.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ERPBasico.Controllers
 {
@@ -22,8 +23,10 @@ namespace ERPBasico.Controllers
         // GET: Gerencias
         public async Task<IActionResult> Index()
         {
-            var modelContext = _context.Gerencias.Include(g => g.Empresa);
-            return View(await modelContext.ToListAsync());
+            //var modelContext = _context.Gerencias.Include(g => g.Empresa);
+            //var modelList = await modelContext.ToListAsync();
+            var modelContext = await _context.Gerencias.ToListAsync();
+            return View(modelContext);
         }
 
         // GET: Gerencias/Details/5
@@ -46,6 +49,7 @@ namespace ERPBasico.Controllers
         }
 
         // GET: Gerencias/Create
+        [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
         public IActionResult Create()
         {
             ViewData["Gerencias"] = new SelectList(_context.Gerencias, "Id", "Nombre");
@@ -57,19 +61,39 @@ namespace ERPBasico.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Nombre,EsGerenciaGeneral,EmpresaId,Id,FechaAlta,Direccion")] Gerencia gerencia)
+        [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
+        public async Task<IActionResult> Create([Bind("Nombre,DireccionId")] Gerencia gerencia)
         {
             if (ModelState.IsValid)
             {
-                var gerente = new Posicion
+
+                using (var transac = _context.Database.BeginTransaction())
                 {
-                    nombre = $@"Gerente de {gerencia.Nombre}",
-                    GerenciaId= gerencia.Id,
-                    gerencia= gerencia
-                };
-                _context.Posiciones.Add(gerente);
-                _context.Add(gerencia);
-                await _context.SaveChangesAsync();
+                    try
+                    {
+                        gerencia.FechaAlta = DateTime.Now;
+                        gerencia.EmpresaId = 1;
+                        _context.Add(gerencia);
+                        await _context.SaveChangesAsync();
+                        var gerente = new Posicion
+                        {
+                            nombre = $@"Gerente de {gerencia.Nombre}",
+                            GerenciaId = gerencia.Id,
+                            gerencia = gerencia,
+                            FechaAlta= DateTime.Now,
+                            EsGerente= true
+                        };
+                        //_context.Add(gerencia);
+                        _context.Posiciones.Add(gerente);
+                        await _context.SaveChangesAsync();
+                        transac.Commit();
+                    }
+                    catch(Exception e)
+                    {
+                        transac.Rollback();
+                        throw e;
+                    }
+                }
                 return RedirectToAction(nameof(Index));
             }
             ViewData["Gerencias"] = new SelectList(_context.Gerencias, "Id");
@@ -77,6 +101,7 @@ namespace ERPBasico.Controllers
         }
 
         // GET: Gerencias/Edit/5
+        [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
         public async Task<IActionResult> Edit(long? id)
         {
             if (id == null)
@@ -89,7 +114,9 @@ namespace ERPBasico.Controllers
             {
                 return NotFound();
             }
-            ViewData["Gerencias"] = new SelectList(_context.Gerencias, "Id", "Nombre", gerencia.Direccion);
+
+            var gerenciasElegibles = await _context.Gerencias.Where(ger => ger.Id != id).ToListAsync();
+            ViewData["Gerencias"] = new SelectList(gerenciasElegibles, "Id", "Nombre", gerencia.Direccion);
             return View(gerencia);
         }
 
@@ -98,6 +125,7 @@ namespace ERPBasico.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
         public async Task<IActionResult> Edit(long id, [Bind("Nombre,EsGerenciaGeneral,EmpresaId,Id,FechaAlta")] Gerencia gerencia)
         {
             if (id != gerencia.Id)
@@ -130,6 +158,7 @@ namespace ERPBasico.Controllers
         }
 
         // GET: Gerencias/Delete/5
+        [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
         public async Task<IActionResult> Delete(long? id)
         {
             if (id == null)
@@ -151,6 +180,7 @@ namespace ERPBasico.Controllers
         // POST: Gerencias/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
+        [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var gerencia = await _context.Gerencias.FindAsync(id);
