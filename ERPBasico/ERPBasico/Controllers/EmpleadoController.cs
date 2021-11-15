@@ -138,7 +138,7 @@ namespace ERPBasico.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Apellido,Dni,Direccion,ObraSocial,Legajo,EmpleadoActivo,Nombre,Email,Id, EsRRHH?")] Empleado empleado)
+        public async Task<IActionResult> Edit(long id, [Bind("Apellido,Dni,Direccion,ObraSocial,Legajo,EmpleadoActivo,Nombre,Email,Id, EsRRHH")] Empleado empleado)
         {
             if (id != empleado.Id)
             {
@@ -149,6 +149,7 @@ namespace ERPBasico.Controllers
             {
                 try
                 {
+                    empleado.Rol = empleado.EsRRHH ? Rol.EmpleadoRRHH : Rol.Empleado;
                     _context.Update(empleado);
                     await _context.SaveChangesAsync();
                 }
