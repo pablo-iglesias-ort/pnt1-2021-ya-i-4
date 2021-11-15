@@ -9,6 +9,7 @@ using ERPBasico.Data;
 using ERPBasico.Models;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using ERPBasico.Dtos;
 
 namespace ERPBasico.Controllers
 {
@@ -56,8 +57,23 @@ namespace ERPBasico.Controllers
                 return NotFound();
             }
 
-            var empleado = await _context.Empleados
-                .FirstOrDefaultAsync(m => m.Id == id);
+            var empleado = await (from p in _context.Posiciones
+                                  join e in _context.Empleados on p.EmpleadoId equals e.Id
+                                  join g in _context.Gerencias on p.GerenciaId equals g.Id
+                                  where e.Id == id
+                                  select new EmpleadoCompletoDto
+                                  {
+                                      Id = e.Id,
+                                      Dni = e.Dni,
+                                      Email = e.Email,
+                                      Direccion = e.Direccion,
+                                      Gerencia = g.Nombre,
+                                      Legajo = e.Legajo,
+                                      ObraSocial = e.ObraSocial,
+                                      Posicion = p.nombre,
+                                      NombreApellido = e.NombreApellido,
+                                      EmpleadoActivo = e.EmpleadoActivo
+                                  }).FirstOrDefaultAsync();
             if (empleado == null)
             {
                 return NotFound();
