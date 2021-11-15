@@ -73,7 +73,7 @@ namespace ERPBasico.Controllers
             var empleado = empleadoDto.FirstOrDefault();
 
             empleado.MontoDisponible = await ObtenerMontoDisponiblePorCC(empleado.CCId, empleado.MontoMaximoCC);
-            TempData["GastoForm"] = String.Concat(empleado.CCId,",",empleado.MontoDisponible.ToString());
+            TempData["GastoForm"] = String.Concat(empleado.CCId, ",", empleado.MontoDisponible.ToString());
             ViewData["Gerencia"] = new SelectList(empleadoDto, "Dni", "NombreGerencia");
             ViewData["Empleado"] = new SelectList(empleadoDto, "Dni", "NombreApellido");
             ViewData["MontoDisp"] = new SelectList(empleadoDto, "Dni", "MontoDisponible");
@@ -91,18 +91,34 @@ namespace ERPBasico.Controllers
             var ccIdMontoArray = gastoForm.Split(',');
             var ccId = Convert.ToInt64(ccIdMontoArray[0]);
             var montoMaximoDisponible = Convert.ToDouble(ccIdMontoArray[1]);
-            
+
             if (ModelState.IsValid)
             {
-                if(gasto.Monto > montoMaximoDisponible)
+                using (var tran = _context.Database.BeginTransaction())
                 {
-                    return BadRequest();
+                    try
+                    {
+                        if (gasto.Monto > montoMaximoDisponible)
+                        {
+                            return BadRequest();
+                        }
+                        gasto.CentroDeCostoId = ccId;
+                        gasto.EmpleadoId = ObtenerIdEmpleado();
+                        gasto.FechaAlta = DateTime.Now;
+                        _context.Gastos.Add(gasto);
+                        await _context.SaveChangesAsync();
+                        var cc = await _context.CentrosDeCosto.FirstOrDefaultAsync(x => x.Id == gasto.CentroDeCostoId);
+                        cc.MontoMaximo -= gasto.Monto;
+                        _context.CentrosDeCosto.Update(cc);
+                        await _context.SaveChangesAsync();
+                        tran.Commit();
+                    }
+                    catch (Exception e)
+                    {
+                        tran.Rollback();
+                        throw e;
+                    }
                 }
-                gasto.CentroDeCostoId = ccId;
-                gasto.EmpleadoId = ObtenerIdEmpleado();
-                gasto.FechaAlta = DateTime.Now;
-                _context.Add(gasto);
-                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             ViewData["CentroDeCostoId"] = new SelectList(_context.CentrosDeCosto, "Id", "Id", gasto.CentroDeCostoId);
