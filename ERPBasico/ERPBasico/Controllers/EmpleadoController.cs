@@ -56,7 +56,7 @@ namespace ERPBasico.Controllers
                 return NotFound();
             }
 
-            var empleado = await ObtenerEmpleadoDetails((long) id);
+            var empleado = await ObtenerEmpleadoDetails((long)id);
 
             if (empleado == null)
             {
@@ -122,12 +122,12 @@ namespace ERPBasico.Controllers
             }
 
             var empleado = await _context.Empleados.FindAsync(id);
-            empleado.EsRRHH = empleado.Rol == Rol.EmpleadoRRHH ? true : false; 
+            empleado.EsRRHH = empleado.Rol == Rol.EmpleadoRRHH ? true : false;
             if (empleado == null)
             {
                 return NotFound();
             }
-            
+
             if (EsEmpleadoRRHH())
                 return View(empleado);
             else
@@ -211,23 +211,25 @@ namespace ERPBasico.Controllers
 
         private async Task<EmpleadoCompletoDto> ObtenerEmpleadoDetails(long id)
         {
-            var empleado = await (from p in _context.Posiciones
-                                 join e in _context.Empleados on p.EmpleadoId equals e.Id
-                                 join g in _context.Gerencias on p.GerenciaId equals g.Id
-                                 where e.Id == id
-                                 select new EmpleadoCompletoDto
-                                 {
-                                     Id = e.Id,
-                                     Dni = e.Dni,
-                                     Email = e.Email,
-                                     Direccion = e.Direccion,
-                                     Gerencia = g.Nombre,
-                                     Legajo = e.Legajo,
-                                     ObraSocial = e.ObraSocial,
-                                     Posicion = p.nombre,
-                                     NombreApellido = e.NombreApellido,
-                                     EmpleadoActivo = e.EmpleadoActivo
-                                 }).FirstOrDefaultAsync();
+            var empleado = await (from e in _context.Empleados
+                                  join p in _context.Posiciones on e.Id equals p.EmpleadoId into posiciones
+                                  from po in posiciones.DefaultIfEmpty()
+                                  join g in _context.Gerencias on po.GerenciaId equals g.Id into gerencias
+                                  from ge in gerencias.DefaultIfEmpty()
+                                  where e.Id == id
+                                  select new EmpleadoCompletoDto
+                                  {
+                                      Id = e.Id,
+                                      Dni = e.Dni,
+                                      Email = e.Email,
+                                      Direccion = e.Direccion,
+                                      Gerencia =  String.IsNullOrEmpty(ge.Nombre) ? "Sin gerencia" : ge.Nombre,
+                                      Legajo = e.Legajo,
+                                      ObraSocial = e.ObraSocial,
+                                      Posicion = String.IsNullOrEmpty(po.nombre) ? "Sin posición" : po.nombre,
+                                      NombreApellido = e.NombreApellido,
+                                      EmpleadoActivo = e.EmpleadoActivo
+                                  }).FirstOrDefaultAsync();
             return empleado;
         }
 
