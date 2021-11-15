@@ -122,6 +122,7 @@ namespace ERPBasico.Controllers
             }
 
             var empleado = await _context.Empleados.FindAsync(id);
+            empleado.EsRRHH = empleado.Rol == Rol.EmpleadoRRHH ? true : false; 
             if (empleado == null)
             {
                 return NotFound();

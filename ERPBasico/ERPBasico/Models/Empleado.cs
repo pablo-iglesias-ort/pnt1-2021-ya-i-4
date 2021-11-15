@@ -29,6 +29,6 @@ namespace ERPBasico.Models
         [Required]
         public Rol Rol { get; set; }
         [NotMapped, Display (Name = "Es RRHH?")]
-        public bool EsRRHH { get => this.Rol == Rol.EmpleadoRRHH ? true : false; set => this.EsRRHH = value; }
+        public bool EsRRHH { get ; set; }
     }
 }
