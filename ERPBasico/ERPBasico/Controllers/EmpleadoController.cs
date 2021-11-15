@@ -28,12 +28,11 @@ namespace ERPBasico.Controllers
         // GET: Empleadoes
         public async Task<IActionResult> Index()
         {
-            var rol = User.FindFirst(ClaimTypes.Role).Value;
-            if (rol == "EmpleadoRRHH")
+            if (EsEmpleadoRRHH())
                 return View(await _context.Empleados.ToListAsync());
             else
             {
-                var empleado = await _context.Empleados.FirstOrDefaultAsync(x => x.Id == ObtenerIdEmpleado());
+                var empleado = await ObtenerEmpleadoDetails(ObtenerIdEmpleado());
                 return View(nameof(Details), empleado);
             }
         }
@@ -57,23 +56,8 @@ namespace ERPBasico.Controllers
                 return NotFound();
             }
 
-            var empleado = await (from p in _context.Posiciones
-                                  join e in _context.Empleados on p.EmpleadoId equals e.Id
-                                  join g in _context.Gerencias on p.GerenciaId equals g.Id
-                                  where e.Id == id
-                                  select new EmpleadoCompletoDto
-                                  {
-                                      Id = e.Id,
-                                      Dni = e.Dni,
-                                      Email = e.Email,
-                                      Direccion = e.Direccion,
-                                      Gerencia = g.Nombre,
-                                      Legajo = e.Legajo,
-                                      ObraSocial = e.ObraSocial,
-                                      Posicion = p.nombre,
-                                      NombreApellido = e.NombreApellido,
-                                      EmpleadoActivo = e.EmpleadoActivo
-                                  }).FirstOrDefaultAsync();
+            var empleado = await ObtenerEmpleadoDetails((long) id);
+
             if (empleado == null)
             {
                 return NotFound();
@@ -114,11 +98,13 @@ namespace ERPBasico.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
-        public async Task<IActionResult> Create([Bind("Apellido,Dni,Direccion,ObraSocial,Legajo,EmpleadoActivo,Nombre,Email,Id,FechaAlta")] Empleado empleado)
+        public async Task<IActionResult> Create([Bind("Apellido,Dni,Direccion,ObraSocial,Legajo,EmpleadoActivo,Nombre,Email,Id, EsRRHH")] Empleado empleado)
         {
 
             if (ModelState.IsValid)
             {
+                empleado.FechaAlta = DateTime.Now;
+                empleado.Rol = empleado.EsRRHH ? Rol.EmpleadoRRHH : Rol.Empleado;
                 empleado.Password = _seguridad.EncriptarPass(empleado.Dni.ToString());
                 _context.Add(empleado);
                 await _context.SaveChangesAsync();
@@ -140,11 +126,11 @@ namespace ERPBasico.Controllers
             {
                 return NotFound();
             }
-            var rol = User.FindFirst(ClaimTypes.Role).Value;
-            if (rol == "EmpleadoRRHH")
+            
+            if (EsEmpleadoRRHH())
                 return View(empleado);
             else
-                return RedirectToAction("EditEmpleadoComun", empleado);
+                return RedirectToAction(nameof(EditEmpleadoComun), empleado);
         }
 
         // POST: Empleadoes/Edit/5
@@ -152,7 +138,7 @@ namespace ERPBasico.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Apellido,Dni,Direccion,ObraSocial,Legajo,EmpleadoActivo,Nombre,Email,Id,FechaAlta")] Empleado empleado)
+        public async Task<IActionResult> Edit(long id, [Bind("Apellido,Dni,Direccion,ObraSocial,Legajo,EmpleadoActivo,Nombre,Email,Id, EsRRHH?")] Empleado empleado)
         {
             if (id != empleado.Id)
             {
@@ -219,6 +205,33 @@ namespace ERPBasico.Controllers
         private long ObtenerIdEmpleado()
         {
             return long.Parse(User.FindFirst("EmpleadoId").Value);
+        }
+
+        private async Task<EmpleadoCompletoDto> ObtenerEmpleadoDetails(long id)
+        {
+            var empleado = await (from p in _context.Posiciones
+                                 join e in _context.Empleados on p.EmpleadoId equals e.Id
+                                 join g in _context.Gerencias on p.GerenciaId equals g.Id
+                                 where e.Id == id
+                                 select new EmpleadoCompletoDto
+                                 {
+                                     Id = e.Id,
+                                     Dni = e.Dni,
+                                     Email = e.Email,
+                                     Direccion = e.Direccion,
+                                     Gerencia = g.Nombre,
+                                     Legajo = e.Legajo,
+                                     ObraSocial = e.ObraSocial,
+                                     Posicion = p.nombre,
+                                     NombreApellido = e.NombreApellido,
+                                     EmpleadoActivo = e.EmpleadoActivo
+                                 }).FirstOrDefaultAsync();
+            return empleado;
+        }
+
+        private bool EsEmpleadoRRHH()
+        {
+            return User.FindFirst(ClaimTypes.Role).Value == nameof(Rol.EmpleadoRRHH);
         }
     }
 }
