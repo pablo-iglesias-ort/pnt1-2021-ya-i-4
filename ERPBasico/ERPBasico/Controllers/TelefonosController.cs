@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ERPBasico.Data;
 using ERPBasico.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ERPBasico.Controllers
 {
+    [Authorize]
     public class TelefonosController : Controller
     {
         private readonly ModelContext _context;
@@ -67,10 +69,11 @@ namespace ERPBasico.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Numero,Tipo,Id,FechaAlta")] Telefono telefono)
+        public async Task<IActionResult> Create([Bind("Numero,Tipo,Id")] Telefono telefono)
         {
             if (ModelState.IsValid)
             {
+                telefono.FechaAlta = DateTime.Now;
                 telefono.EmpleadoId = ObtenerIdEmpleado();
                 _context.Add(telefono);
                 await _context.SaveChangesAsync();
@@ -113,7 +116,7 @@ namespace ERPBasico.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(long id, [Bind("Numero,Tipo,Id,FechaAlta")] Telefono telefono)
+        public async Task<IActionResult> Edit(long id, [Bind("Numero,Tipo,Id")] Telefono telefono)
         {
             if (id != telefono.Id)
             {

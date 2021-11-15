@@ -13,14 +13,14 @@ namespace ERPBasico.Models
         [Required(ErrorMessage = "Apellido es un campo requerido"), StringLength(15, ErrorMessage = "Apellido es demasiado largo")]
         public string Apellido { get; set; }
         [Range(1, 99999999, ErrorMessage = "DNI fuera del rango permitido"), Required(ErrorMessage = "DNI es un campo requerido")]
-        public int Dni { get; set; }        
+        public int Dni { get; set; }
         [MinLength(1, ErrorMessage = "Se debe registrar al menos un teléfono")]
         public virtual ICollection<Telefono> Telefonos { get; set; }
         [Required, StringLength(20, ErrorMessage = "Dirección es un campo requerido")]
         public string Direccion { get; set; }
         public string ObraSocial { get; set; }
         [Required(ErrorMessage = "Legajo es un campo requerido")]
-        public uint Legajo { get; set; }        
+        public uint Legajo { get; set; }
         public bool EmpleadoActivo { get; set; }
         public virtual Imagen Foto { get; set; }
         public byte[] Password { get; set; }
@@ -28,5 +28,7 @@ namespace ERPBasico.Models
         public string NombreApellido { get => Nombre + " " + Apellido; }
         [Required]
         public Rol Rol { get; set; }
+        [NotMapped, Display (Name = "Es RRHH?")]
+        public bool EsRRHH { get => this.Rol == Rol.EmpleadoRRHH ? true : false; set => this.EsRRHH = value; }
     }
 }

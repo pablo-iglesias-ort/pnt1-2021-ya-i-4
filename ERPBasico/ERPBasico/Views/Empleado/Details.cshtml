@@ -1,4 +1,4 @@
-﻿@model ERPBasico.Models.Empleado
+﻿@model ERPBasico.Dtos.EmpleadoCompletoDto
 
 @{
     ViewData["Title"] = "Details";
@@ -12,16 +12,22 @@
     <dl class="row">
 
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Nombre)
+            @Html.DisplayNameFor(model => model.NombreApellido)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Nombre)
+            @Html.DisplayFor(model => model.NombreApellido)
         </dd>
         <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.Apellido)
+            @Html.DisplayNameFor(model => model.Posicion)
         </dt>
         <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.Apellido)
+            @Html.DisplayFor(model => model.Posicion)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Gerencia)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Gerencia)
         </dd>
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.Dni)
@@ -58,12 +64,6 @@
         </dt>
         <dd class="col-sm-10">
             @Html.DisplayFor(model => model.Email)
-        </dd>
-        <dt class="col-sm-2">
-            @Html.DisplayNameFor(model => model.FechaAlta)
-        </dt>
-        <dd class="col-sm-10">
-            @Html.DisplayFor(model => model.FechaAlta)
         </dd>
     </dl>
 </div>

@@ -55,8 +55,8 @@ namespace ERPBasico.Controllers
         {
             //var empleado = new Empleado
             //{
-            //    Nombre = "Nacho",
-            //    Apellido = "Ampudia",
+            //    Nombre = "Franco",
+            //    Apellido = "Redoni",
             //    Direccion = "Domicilio Test",
             //    Dni = 11111111,
             //    Email = usuario,
@@ -68,7 +68,7 @@ namespace ERPBasico.Controllers
             //};
             //_context.Empleados.Add(empleado);
             //_context.SaveChanges();
-            
+
             var urlIngreso = TempData["UrlIngreso"] as string;
             if (!string.IsNullOrEmpty(usuario) && !string.IsNullOrEmpty(password))
             {
