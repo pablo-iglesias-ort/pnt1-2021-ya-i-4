@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace ERPBasico.Controllers
 {
+    [Authorize]
     public class PosicionsController : Controller
     {
         private readonly ModelContext _context;

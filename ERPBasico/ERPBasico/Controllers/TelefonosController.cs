@@ -7,9 +7,11 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ERPBasico.Data;
 using ERPBasico.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ERPBasico.Controllers
 {
+    [Authorize]
     public class TelefonosController : Controller
     {
         private readonly ModelContext _context;
