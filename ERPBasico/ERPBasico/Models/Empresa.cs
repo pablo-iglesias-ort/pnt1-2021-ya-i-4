@@ -12,7 +12,6 @@ namespace ERPBasico.Models
         public Imagen Logo { get; set; }
         [Range(4,100, ErrorMessage="Mail Invalido"),Required(ErrorMessage= "La direccion es un campo requerido")]
         public string Direccion { get; set; }
-        [Required(ErrorMessage = "El telefono de contacto es un campo requerido")]
         public Telefono TelefonoContacto { get; set; }
         [Required(ErrorMessage = "El mail de contacto es un campo requerido")]
         public string EmailContacto { get; set; }

@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace ERPBasico.Migrations
 {
     [DbContext(typeof(ModelContext))]
-    [Migration("20211111204850_TelefonoFKEmpleado")]
-    partial class TelefonoFKEmpleado
+    [Migration("20211112002328_InitialMigration")]
+    partial class InitialMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -228,7 +228,7 @@ namespace ERPBasico.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("EmpleadoId")
+                    b.Property<long?>("EmpleadoId")
                         .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("FechaAlta")
@@ -237,7 +237,7 @@ namespace ERPBasico.Migrations
                     b.Property<long>("GerenciaId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<long>("JefeId")
+                    b.Property<long?>("JefeId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("descripcion")
@@ -362,9 +362,7 @@ namespace ERPBasico.Migrations
                 {
                     b.HasOne("ERPBasico.Models.Empleado", "empleado")
                         .WithMany()
-                        .HasForeignKey("EmpleadoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EmpleadoId");
 
                     b.HasOne("ERPBasico.Models.Gerencia", "gerencia")
                         .WithOne("Responsable")
@@ -374,9 +372,7 @@ namespace ERPBasico.Migrations
 
                     b.HasOne("ERPBasico.Models.Posicion", "Jefe")
                         .WithMany()
-                        .HasForeignKey("JefeId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("JefeId");
 
                     b.Navigation("empleado");
 

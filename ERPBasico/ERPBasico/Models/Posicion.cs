@@ -11,9 +11,10 @@ namespace ERPBasico.Models
         public String descripcion { get; set; }
         public double sueldo      { get; set; }
         [ForeignKey("Empleado")]
-        public long EmpleadoId { get; set; }
+        public long? EmpleadoId { get; set; }
         public Empleado empleado { get; set; }
-        public long JefeId { get; set; }
+        public bool EsGerente { get; set; }
+        public long? JefeId { get; set; }
         public Posicion Jefe { get; set; }
         [ForeignKey("Gerencia")]
         public long GerenciaId { get; set; }
