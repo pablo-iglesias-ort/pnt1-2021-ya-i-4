@@ -84,8 +84,16 @@ namespace ERPBasico.Controllers
                             FechaAlta= DateTime.Now,
                             EsGerente= true
                         };
-                        //_context.Add(gerencia);
                         _context.Posiciones.Add(gerente);
+                        await _context.SaveChangesAsync();
+                        var cc = new CentroDeCosto
+                        {
+                            Nombre = $"Centro de costo de {gerencia.Nombre}",
+                            FechaAlta = DateTime.Now,
+                            GerenciaId = gerencia.Id,
+                            MontoMaximo = 500000
+                        };
+                        _context.CentrosDeCosto.Add(cc);
                         await _context.SaveChangesAsync();
                         transac.Commit();
                     }

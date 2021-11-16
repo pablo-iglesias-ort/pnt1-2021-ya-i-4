@@ -6,9 +6,11 @@ namespace ERPBasico.Models
 {
     public class Posicion : EntidadBase
     {
-        [Required(ErrorMessage = "Nombre es un campo requerido")]
+        [Required(ErrorMessage = "Nombre es un campo requerido"), Display(Name = "Nombre")]
         public String nombre      { get; set; }
+        [Display(Name = "Descripción")]
         public String descripcion { get; set; }
+        [Display(Name = "Sueldo")]
         public double sueldo      { get; set; }
         [ForeignKey("Empleado")]
         public long? EmpleadoId { get; set; }
