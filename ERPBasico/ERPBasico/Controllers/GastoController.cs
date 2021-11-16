@@ -180,6 +180,29 @@ namespace ERPBasico.Controllers
             ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido", gasto.EmpleadoId);
             return View(gasto);
         }
+        
+        public async Task<IActionResult> ListarGastosPorGerencia(long gerenciaId)
+        {
+            var gastos = await (from g in _context.Gastos
+                         join e in _context.Empleados on g.EmpleadoId equals e.Id into empleados
+                         from emp in empleados.DefaultIfEmpty()
+                         join c in _context.CentrosDeCosto on g.CentroDeCostoId equals c.Id into centrosDeCosto
+                         from cc in centrosDeCosto.DefaultIfEmpty()
+                         join ge in _context.Gerencias on cc.GerenciaId equals ge.Id into gerencias
+                         from ger in gerencias.DefaultIfEmpty()
+                         where ger.Id == gerenciaId
+                         select new GastoPorGerenciaDto
+                         {
+                             Id = g.Id,
+                             Descripcion = g.Descripcion,
+                             Empleado = String.IsNullOrEmpty(emp.NombreApellido) ? string.Empty : emp.NombreApellido,
+                             Fecha = g.Fecha.ToString("dd-MM-yyyy"),
+                             Gerencia = String.IsNullOrEmpty(ger.Nombre) ? string.Empty : ger.Nombre,
+                             Monto = g.Monto
+                         }).ToListAsync();
+
+            return View(gastos);
+        }
 
         // GET: Gastos/Delete/5
         public async Task<IActionResult> Delete(long? id)

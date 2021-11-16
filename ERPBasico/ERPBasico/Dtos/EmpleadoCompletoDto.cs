@@ -14,6 +14,7 @@ namespace ERPBasico.Dtos
         public long GerenciaId { get; set; }
         public long PosicionId { get; set; }
         public long CCId { get; set; }
+        public string Sueldo { get; set; }
         public string NombreCentroDeCostos { get; set; }
         public string NombrePosicion { get; set; }
         public string NombreGerencia { get; set; }
