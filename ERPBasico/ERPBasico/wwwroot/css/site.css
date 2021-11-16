@@ -137,3 +137,10 @@ form button{
 .back-list{
     margin-bottom: 5rem;
 }
+
+.name-hint {
+    margin-top: 10px;
+}
+.logout-button {
+    margin-top: -20px;
+}

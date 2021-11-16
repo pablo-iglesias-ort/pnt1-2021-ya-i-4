@@ -18,9 +18,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.sueldo)
             </th>
-            <th>
-                @Html.DisplayNameFor(model => model.empleado)
-            </th>
+            <td>
+                @Html.DisplayNameFor(model => model.EsGerente)
+            </td>
+            <td>
+                @Html.DisplayNameFor(model => model.FechaAlta)
+            </td>
             <th></th>
         </tr>
     </thead>
@@ -37,16 +40,10 @@
                 @Html.DisplayFor(modelItem => item.sueldo)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.empleado.Apellido)
-            </td>
-            <td>
                 @Html.DisplayFor(modelItem => item.EsGerente)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Jefe.nombre)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.gerencia.Nombre)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.FechaAlta)
