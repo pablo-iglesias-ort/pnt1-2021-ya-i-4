@@ -196,11 +196,20 @@ namespace ERPBasico.Controllers
         [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
         public async Task<IActionResult> AsignarPosicion(long idEmpleado, long idPosicion)
         {
+            RemoverPosicionEmpleado(idEmpleado);
             var posicion = await _context.Posiciones.FirstOrDefaultAsync(pos => pos.Id == idPosicion);
             posicion.EmpleadoId = idEmpleado;
             _context.Update(posicion);
             await _context.SaveChangesAsync();
             return View(nameof(Details), posicion);
+        }
+
+        private async void RemoverPosicionEmpleado(long idEmpleado)
+        {
+            var posicionAnterior = await _context.Posiciones.Where(pos => pos.EmpleadoId == idEmpleado).FirstOrDefaultAsync();
+            posicionAnterior.EmpleadoId = 0;
+            _context.Update(posicionAnterior);
+            await _context.SaveChangesAsync();
         }
     }
 }
