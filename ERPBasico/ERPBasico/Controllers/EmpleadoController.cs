@@ -29,12 +29,41 @@ namespace ERPBasico.Controllers
         public async Task<IActionResult> Index()
         {
             if (EsEmpleadoRRHH())
-                return View(await _context.Empleados.ToListAsync());
+            {
+                List<EmpleadoCompletoDto> empleados = await ObtenerEmpleadosParaVisualizar();
+                return View(empleados.OrderByDescending(x => x.Sueldo));
+            }
             else
             {
                 var empleado = await ObtenerEmpleadoDetails(ObtenerIdEmpleado());
                 return View(nameof(Details), empleado);
             }
+        }
+
+        private async Task<List<EmpleadoCompletoDto>> ObtenerEmpleadosParaVisualizar()
+        {
+            //List<EmpleadoCompletoDto> empleados = new List<EmpleadoCompletoDto>();
+            var empleados = from e in _context.Empleados
+                        join p in _context.Posiciones on e.Id equals p.EmpleadoId into posiciones
+                        from po in posiciones.DefaultIfEmpty()
+                        join g in _context.Gerencias on po.GerenciaId equals g.Id into gerencias
+                        from ge in gerencias.DefaultIfEmpty()
+                        select new EmpleadoCompletoDto
+                        {
+                            Id = e.Id,
+                            Sueldo = po == null ? "Sin sueldo asignado" : po.sueldo.ToString(),
+                            Gerencia = String.IsNullOrEmpty(ge.Nombre) ? "Sin gerencia" : ge.Nombre,
+                            Posicion = String.IsNullOrEmpty(po.nombre) ? "Sin posición" : po.nombre,
+                            NombreApellido = e.NombreApellido,
+                            EmpleadoActivo = e.EmpleadoActivo
+                        };
+
+            if(empleados == null)
+            {
+                return new List<EmpleadoCompletoDto>();
+            }
+
+            return await empleados.ToListAsync();
         }
 
         public async Task<IActionResult> EditarDatosContacto()
@@ -194,7 +223,8 @@ namespace ERPBasico.Controllers
         public async Task<IActionResult> DeleteConfirmed(long id)
         {
             var empleado = await _context.Empleados.FindAsync(id);
-            _context.Empleados.Remove(empleado);
+            empleado.EmpleadoActivo = false;
+            _context.Update(empleado);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
@@ -223,7 +253,7 @@ namespace ERPBasico.Controllers
                                       Dni = e.Dni,
                                       Email = e.Email,
                                       Direccion = e.Direccion,
-                                      Gerencia =  String.IsNullOrEmpty(ge.Nombre) ? "Sin gerencia" : ge.Nombre,
+                                      Gerencia = String.IsNullOrEmpty(ge.Nombre) ? "Sin gerencia" : ge.Nombre,
                                       Legajo = e.Legajo,
                                       ObraSocial = e.ObraSocial,
                                       Posicion = String.IsNullOrEmpty(po.nombre) ? "Sin posición" : po.nombre,
