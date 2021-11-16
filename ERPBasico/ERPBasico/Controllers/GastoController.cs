@@ -180,7 +180,8 @@ namespace ERPBasico.Controllers
             ViewData["EmpleadoId"] = new SelectList(_context.Empleados, "Id", "Apellido", gasto.EmpleadoId);
             return View(gasto);
         }
-        
+
+        [Authorize(Roles = nameof(Rol.EmpleadoRRHH))]
         public async Task<IActionResult> ListarGastosPorGerencia(long gerenciaId)
         {
             var gastos = await (from g in _context.Gastos
