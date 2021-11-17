@@ -145,11 +145,16 @@ form button{
     margin-top: 10px;
 }
 
-#nav-exit{
+.navbar-exit {
     display: flex;
     justify-content: right;
 }
 
 .nav-exit-item{
     margin: auto;
+    background: #ffffff;
+}
+
+.nav-exit-item:hover{
+    background: #cccccc;
 }

@@ -55,8 +55,8 @@
                 @if (User.Identity.IsAuthenticated)
                 {
                     <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse" >
-                        <ul class="navbar-nav flex-grow-1" id="nav-exit">
-                            <li class="nav-item float-right">
+                        <ul class="navbar-nav flex-grow-1 navbar-exit">
+                            <li class="nav-item ">
                                 <a class="nav-link text-success font-italic name-hint nav-exit-item" asp-area="">@User.FindFirstValue(ClaimTypes.GivenName)</a>
                             </li>
                             <li class="nav-item float-right">
