@@ -30,7 +30,8 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model) { 
+       
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.NombreApellido)
@@ -48,11 +49,13 @@
                 @Html.DisplayFor(modelItem => item.Gerencia)
             </th>
             <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Detalles</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Dar de baja</a>
+                <a asp-action="Edit" asp-route-id="@item.Id">Editar</a>
+                <a asp-action="Details" asp-route-id="@item.Id">Detalles</a>
+                @if (item.EmpleadoActivo == true) { 
+                    <a asp-action="Delete" asp-route-id="@item.Id">Dar de baja</a>
+                }
             </td>
-        </tr>
+        </tr>                     
 }
     </tbody>
 </table>
