@@ -38,21 +38,25 @@ namespace ERPBasico.Data
                     FechaAlta = fechaHoy,
                     Nombre = "Gerencia General IT"
                 };
+                context.Gerencias.Add(gerenciaGeneral);
+                context.SaveChanges();
                 var gerenciaIt = new Gerencia
                 {
                     EmpresaId = 1,
                     FechaAlta = fechaHoy,
                     Nombre = "Gerencia IT",
                     EsGerenciaGeneral = false,
+                    DireccionId = gerenciaGeneral.Id
                 };
                 var gerenciaRRHH = new Gerencia
                 {
                     EmpresaId = 1,
                     FechaAlta = fechaHoy,
                     EsGerenciaGeneral = false,
-                    Nombre = "Gerencia de Recursos Humanos"
+                    Nombre = "Gerencia de Recursos Humanos",
+                    DireccionId = gerenciaGeneral.Id
                 };
-                context.Gerencias.AddRange(gerenciaGeneral, gerenciaIt, gerenciaRRHH);
+                context.Gerencias.AddRange(gerenciaIt, gerenciaRRHH);
                 context.SaveChanges();
             }
 
