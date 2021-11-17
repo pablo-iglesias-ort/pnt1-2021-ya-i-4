@@ -144,3 +144,12 @@ form button{
 .logout-button {
     margin-top: 10px;
 }
+
+#nav-exit{
+    display: flex;
+    justify-content: right;
+}
+
+.nav-exit-item{
+    margin: auto;
+}
