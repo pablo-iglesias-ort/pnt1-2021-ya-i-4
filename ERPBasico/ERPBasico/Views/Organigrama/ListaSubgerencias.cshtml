@@ -1,0 +1,36 @@
+﻿@model IEnumerable<ERPBasico.Models.Gerencia>
+
+@{
+    ViewData["Title"] = "Organigrama";
+}
+
+<h1>Gerencias:</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaAlta)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaAlta)
+            </td>
+            <td>
+                <a asp-action="AbrirGerencia" asp-route-id="@item.Id">Abrir</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
