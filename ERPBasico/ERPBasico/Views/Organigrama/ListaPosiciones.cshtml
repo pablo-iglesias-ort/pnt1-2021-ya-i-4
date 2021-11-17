@@ -1,0 +1,50 @@
+﻿@model IEnumerable<ERPBasico.Models.Posicion>
+
+@{
+    ViewData["Title"] = "ListaPosiciones";
+}
+
+<h1>Posiciones:</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.nombre)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.descripcion)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.sueldo)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.EsGerente)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.FechaAlta)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.nombre)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.descripcion)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.sueldo)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.EsGerente)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FechaAlta)
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
