@@ -207,9 +207,12 @@ namespace ERPBasico.Controllers
         private async void RemoverPosicionEmpleado(long idEmpleado)
         {
             var posicionAnterior = await _context.Posiciones.Where(pos => pos.EmpleadoId == idEmpleado).FirstOrDefaultAsync();
-            posicionAnterior.EmpleadoId = 0;
-            _context.Update(posicionAnterior);
-            await _context.SaveChangesAsync();
+            if (posicionAnterior != null)
+            {
+                posicionAnterior.EmpleadoId = 0;
+                _context.Update(posicionAnterior);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }
