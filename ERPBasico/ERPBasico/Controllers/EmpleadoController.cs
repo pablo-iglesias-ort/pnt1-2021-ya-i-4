@@ -180,6 +180,7 @@ namespace ERPBasico.Controllers
                 try
                 {
                     empleado.Rol = empleado.EsRRHH ? Rol.EmpleadoRRHH : Rol.Empleado;
+                    //TODO:  Obtener el objeto de la base de datos y modificar solo lo necesario.
                     _context.Update(empleado);
                     await _context.SaveChangesAsync();
                 }

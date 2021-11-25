@@ -71,7 +71,6 @@ namespace ERPBasico.Controllers
                                          MontoMaximoCC = c.MontoMaximo
                                      }).ToListAsync();
             var empleado = empleadoDto.FirstOrDefault();
-
             empleado.MontoDisponible = await ObtenerMontoDisponiblePorCC(empleado.CCId, empleado.MontoMaximoCC);
             TempData["GastoForm"] = String.Concat(empleado.CCId, ",", empleado.MontoDisponible.ToString());
             ViewData["Gerencia"] = new SelectList(empleadoDto, "Dni", "NombreGerencia");
