@@ -179,10 +179,20 @@ namespace ERPBasico.Controllers
             {
                 try
                 {
+                    if(empleado.Password != null) { 
                     empleado.Rol = empleado.EsRRHH ? Rol.EmpleadoRRHH : Rol.Empleado;
                     //TODO:  Obtener el objeto de la base de datos y modificar solo lo necesario.
                     _context.Update(empleado);
                     await _context.SaveChangesAsync();
+                    }
+                    else
+                    {
+                        var p = _seguridad.EncriptarPass(empleado.Dni.ToString());
+                        empleado.Password = p;
+                        empleado.Rol = empleado.EsRRHH ? Rol.EmpleadoRRHH : Rol.Empleado;
+                        _context.Update(empleado);
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {

@@ -79,38 +79,48 @@ namespace ERPBasico.Controllers
                 {
                     // Verificamos que coincida la contraseña
                     var contraseña = _seguridad.EncriptarPass(password);
-                    if (contraseña.SequenceEqual(user.Password))
+                    try
                     {
-                        // Creamos los Claims (credencial de acceso con informacion del usuario)
-                        ClaimsIdentity identidad = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
-
-                        // Agregamos a la credencial el nombre de usuario
-                        identidad.AddClaim(new Claim(ClaimTypes.Name, usuario));
-
-                        // Agregamos a la credencial el nombre del estudiante/administrador
-                        identidad.AddClaim(new Claim(ClaimTypes.GivenName, user.Nombre));
-
-                        // Agregamos a la credencial el Rol
-                        identidad.AddClaim(new Claim(ClaimTypes.Role, user.Rol.ToString()));
-
-                        // Agregamos el ID de Empleado
-                        identidad.AddClaim(new Claim("EmpleadoId", user.Id.ToString()));
-
-                        ClaimsPrincipal principal = new ClaimsPrincipal(identidad);
-                        await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
-
-                        if (!string.IsNullOrEmpty(urlIngreso))
+                        if (contraseña.SequenceEqual(user.Password))
                         {
-                            return Redirect(urlIngreso);
+                            // Creamos los Claims (credencial de acceso con informacion del usuario)
+                            ClaimsIdentity identidad = new ClaimsIdentity(CookieAuthenticationDefaults.AuthenticationScheme);
+
+                            // Agregamos a la credencial el nombre de usuario
+                            identidad.AddClaim(new Claim(ClaimTypes.Name, usuario));
+
+                            // Agregamos a la credencial el nombre del estudiante/administrador
+                            identidad.AddClaim(new Claim(ClaimTypes.GivenName, user.Nombre));
+
+                            // Agregamos a la credencial el Rol
+                            identidad.AddClaim(new Claim(ClaimTypes.Role, user.Rol.ToString()));
+
+                            // Agregamos el ID de Empleado
+                            identidad.AddClaim(new Claim("EmpleadoId", user.Id.ToString()));
+
+                            ClaimsPrincipal principal = new ClaimsPrincipal(identidad);
+                            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+
+                            if (!string.IsNullOrEmpty(urlIngreso))
+                            {
+                                return Redirect(urlIngreso);
+                            }
+                            else
+                            {
+                                // Redirigimos a la pagina principal
+                                return RedirectToAction("Index", "Empleado");
+                            }
                         }
-                        else
-                        {
-                            // Redirigimos a la pagina principal
-                            return RedirectToAction("Index", "Empleado");
-                        }
+
+                    }catch(ArgumentNullException e)
+                    {
+                        ViewBag.ErrorEnLogin = "Contraseña no puede ser nula";
+                        TempData["UrlIngreso"] = urlIngreso;
+                        return View();
                     }
                 }
             }
+
             ViewBag.ErrorEnLogin = "Verifique el usuario y contraseña";
             TempData["UrlIngreso"] = urlIngreso; // Volvemos a enviarla en el TempData para no perderla
 
