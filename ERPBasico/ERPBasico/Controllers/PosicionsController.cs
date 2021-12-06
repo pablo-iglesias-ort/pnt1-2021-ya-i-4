@@ -209,7 +209,7 @@ namespace ERPBasico.Controllers
             var posicionAnterior = await _context.Posiciones.Where(pos => pos.EmpleadoId == idEmpleado).FirstOrDefaultAsync();
             if (posicionAnterior != null)
             {
-                posicionAnterior.EmpleadoId = 0;
+                posicionAnterior.EmpleadoId = null;                         
                 _context.Update(posicionAnterior);
                 await _context.SaveChangesAsync();
             }

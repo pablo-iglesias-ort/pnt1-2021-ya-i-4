@@ -44,21 +44,21 @@ namespace ERPBasico.Controllers
         {
             //List<EmpleadoCompletoDto> empleados = new List<EmpleadoCompletoDto>();
             var empleados = from e in _context.Empleados
-                        join p in _context.Posiciones on e.Id equals p.EmpleadoId into posiciones
-                        from po in posiciones.DefaultIfEmpty()
-                        join g in _context.Gerencias on po.GerenciaId equals g.Id into gerencias
-                        from ge in gerencias.DefaultIfEmpty()
-                        select new EmpleadoCompletoDto
-                        {
-                            Id = e.Id,
-                            Sueldo = po == null ? "Sin sueldo asignado" : po.sueldo.ToString(),
-                            Gerencia = String.IsNullOrEmpty(ge.Nombre) ? "Sin gerencia" : ge.Nombre,
-                            Posicion = String.IsNullOrEmpty(po.nombre) ? "Sin posición" : po.nombre,
-                            NombreApellido = e.NombreApellido,
-                            EmpleadoActivo = e.EmpleadoActivo
-                        };
+                            join p in _context.Posiciones on e.Id equals p.EmpleadoId into posiciones
+                            from po in posiciones.DefaultIfEmpty()
+                            join g in _context.Gerencias on po.GerenciaId equals g.Id into gerencias
+                            from ge in gerencias.DefaultIfEmpty()
+                            select new EmpleadoCompletoDto
+                            {
+                                Id = e.Id,
+                                Sueldo = po == null ? "Sin sueldo asignado" : po.sueldo.ToString(),
+                                Gerencia = String.IsNullOrEmpty(ge.Nombre) ? "Sin gerencia" : ge.Nombre,
+                                Posicion = String.IsNullOrEmpty(po.nombre) ? "Sin posición" : po.nombre,
+                                NombreApellido = e.NombreApellido,
+                                EmpleadoActivo = e.EmpleadoActivo
+                            };
 
-            if(empleados == null)
+            if (empleados == null)
             {
                 return new List<EmpleadoCompletoDto>();
             }
@@ -179,9 +179,21 @@ namespace ERPBasico.Controllers
             {
                 try
                 {
-                    empleado.Rol = empleado.EsRRHH ? Rol.EmpleadoRRHH : Rol.Empleado;
-                    _context.Update(empleado);
-                    await _context.SaveChangesAsync();
+                    var empleadoDb = await _context.Empleados.FirstOrDefaultAsync(x => x.Id == empleado.Id);
+                    if (empleadoDb != null)
+                    {
+                        empleadoDb.Legajo = empleado.Legajo;
+                        empleadoDb.Nombre = empleado.Nombre;
+                        empleadoDb.ObraSocial = empleado.ObraSocial;
+                        empleadoDb.Apellido = empleado.Apellido;
+                        empleadoDb.Direccion = empleado.Direccion;
+                        empleadoDb.Email = empleado.Email;
+                        empleadoDb.EmpleadoActivo = empleado.EmpleadoActivo;
+                        empleadoDb.Rol = empleado.EsRRHH ? Rol.EmpleadoRRHH : Rol.Empleado;
+                        
+                        _context.Update(empleadoDb);
+                        await _context.SaveChangesAsync();
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
